@@ -1,0 +1,23 @@
+<html>
+  <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@2.0.0/dist/browser.script.iife.js"></script>
+  <script type="text/ruby">
+    require 'js'
+
+    FPS = 60.freeze
+    canvas = JS.global[:document].querySelector('#myCanvas')
+    @ctx = canvas.getContext("2d")
+    TIME_PER_FRAME = (1000 / FPS).freeze
+    @x = 0
+    @y = 0
+    @speedX = 2
+    @speedY = 2
+
+    def draw_rectangle
+      @ctx[:fillStyle] = 'red'
+      @ctx.fillRect(@x, @y, 50, 50)
+    end
+
+    JS.global.setInterval(-> { draw_rectangle }, TIME_PER_FRAME)
+  </script>
+  <canvas id="myCanvas" width="400" height="400"></canvas>
+</html>
