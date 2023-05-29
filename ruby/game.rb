@@ -14,4 +14,15 @@ def draw_rectangle
   @ctx.fillRect(@x, @y, 50, 50)
 end
 
-JS.global.setInterval(-> { draw_rectangle }, TIME_PER_FRAME)
+def move_rectangle_left = @x -= @speedX
+def move_rectangle_right = @x += @speedX
+def move_rectangle_top = @y -= @speedY
+def move_rectangle_bottom = @y += @speedY
+
+def draw
+  @ctx.clearRect(0,0, 400, 400)
+  draw_rectangle
+  move_rectangle_bottom
+end
+
+JS.global.setInterval(-> { draw }, TIME_PER_FRAME)
