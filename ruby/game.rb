@@ -4,37 +4,21 @@ FPS = 60.freeze
 @canvas = JS.global[:document].querySelector('#myCanvas')
 @ctx = @canvas.getContext("2d")
 TIME_PER_FRAME = (1000 / FPS).freeze
-@x = 0
-@y = 0
-@speedX = 2
-@speedY = 2
-@rectangle_width = 50
-@max_width = @canvas[:width].to_i - @rectangle_width
-@max_height = @canvas[:height].to_i - @rectangle_width
-
-def draw_rectangle
-  @ctx[:fillStyle] = 'red'
-  @ctx.fillRect(@x, @y, @rectangle_width, @rectangle_width)
-end
-
-def move_rectangle_left = @x = [ @x - @speedX, 0 ].max
-def move_rectangle_right = @x = [ @x + @speedX, @max_width ].min
-def move_rectangle_up = @y = [ @y - @speedY, 0].max
-def move_rectangle_down = @y = [ @y + @speedY, @max_height].min
+@hero = Hero.new(0,0, @canvas, @ctx)
 
 @pressed_keys = {up: false, down: false, left: false, right: false}
 
 def update
-  move_rectangle_down if @pressed_keys[:down]
-  move_rectangle_right if @pressed_keys[:right]
-  move_rectangle_up if @pressed_keys[:up]
-  move_rectangle_left if @pressed_keys[:left]
+  @hero.move(:down) if @pressed_keys[:down]
+  @hero.move(:right) if @pressed_keys[:right]
+  @hero.move(:up) if @pressed_keys[:up]
+  @hero.move(:left) if @pressed_keys[:left]
 end
 
 def draw
   @ctx.clearRect(0,0, @canvas[:width].to_i, @canvas[:height].to_i)
   update
-  draw_rectangle
+  @hero.draw
 end
 
 def disable_defaults
