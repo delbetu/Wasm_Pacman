@@ -6,29 +6,36 @@ class Hero
     @y = y
     @canvas = canvas
     @context = context
-    @speedX = 2
-    @speedY = 2
-    @rectangle_width = 50
-    @max_width = @canvas[:width].to_i - @rectangle_width
-    @max_height = @canvas[:height].to_i - @rectangle_width
+    @xd = @yd = 2
+    @width = 50
+    @height = 50
   end
 
   def move(direction)
     case direction
     when :left
-      @x = [ @x - @speedX, 0 ].max
+      @x -= @xd if within_limits?(@x - @xd, @y)
     when :right
-      @x = [ @x + @speedX, @max_width ].min
+      @x += @xd if within_limits?(@x + @xd, @y)
     when :up
-      @y = [ @y - @speedY, 0].max
+      @y -= @yd if within_limits?(@x, @y - @yd)
     when :down
-      @y = [ @y + @speedY, @max_height].min
+      @y += @yd if within_limits?(@x, @y + @yd)
     end
+  end
+
+  def within_limits?(x, y)
+    before_right_limit = x + @width <= @canvas[:width].to_i
+    after_left_limit = x >= 0
+    before_bottom_limit = y + @height <= @canvas[:height].to_i
+    after_top_limit = y >= 0
+
+    before_right_limit && after_left_limit && before_bottom_limit && after_top_limit
   end
 
   def draw
     @context[:fillStyle] = 'red'
-    @context.fillRect(@x, @y, @rectangle_width, @rectangle_width)
+    @context.fillRect(@x, @y, @width, @height)
   end
 end
 
