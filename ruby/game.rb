@@ -1,6 +1,7 @@
 require 'js'
 
 FPS = 60.freeze
+# TODO: move to a Window object
 @canvas = JS.global[:document].querySelector('#myCanvas')
 @ctx = @canvas.getContext("2d")
 TIME_PER_FRAME = (1000 / FPS).freeze
