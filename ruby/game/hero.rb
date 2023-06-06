@@ -40,12 +40,31 @@ class Hero
   def initialize(x,y, canvas, context)
     @canvas = canvas
     @context = context
-    super(x, y, 2, 2, 50, 50, canvas)
+    @current_frame = 1
+    height = width = 16
+    super(x, y, 2, 2, width, height, canvas)
+  end
+
+  def animate
+    # open/close mouth
+    @animate_time ||= Time.now
+    elapsed = Time.now - @animate_time
+    if elapsed > 0.2
+      @animate_time = Time.now
+
+      @current_frame = ( @current_frame + 1 ) % 3
+    end
   end
 
   def draw
-    @context[:fillStyle] = 'red'
-    @context.fillRect(@x, @y, @width, @height)
+    animate
+    image = JS.eval("return new Image()")
+    image[:src] = "./assets/sprite.png"
+    @context.drawImage(
+      image,
+      @current_frame * width,
+      0, width, height, @x, @y, width, height
+    )
   end
 end
 
