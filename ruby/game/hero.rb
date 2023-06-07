@@ -45,19 +45,15 @@ class Hero
     super(x, y, 2, 2, width, height, canvas)
   end
 
-  def animate
+  def draw_sprite
     # open/close mouth
-    @animate_time ||= Time.now
-    elapsed = Time.now - @animate_time
-    if elapsed > 0.2
-      @animate_time = Time.now
-
+    every(0.2) do
       @current_frame = ( @current_frame + 1 ) % 3
     end
   end
 
   def draw
-    animate
+    draw_sprite
     image = JS.eval("return new Image()")
     image[:src] = "./assets/sprite.png"
     @context.drawImage(
@@ -65,6 +61,18 @@ class Hero
       @current_frame * width,
       0, width, height, @x, @y, width, height
     )
+  end
+
+  # TODO: Move to utils ?
+  def every(seconds)
+    @animate_time ||= Time.now
+    elapsed = Time.now - @animate_time
+    if elapsed > seconds
+      # restart timer
+      @animate_time = Time.now
+
+      yield
+    end
   end
 end
 
