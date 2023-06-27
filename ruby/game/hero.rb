@@ -1,8 +1,8 @@
 require 'js'
 
 module Moveable
-  attr_accessor :x, :y, :speed_x, :speed_y, :width, :height
-  def initialize(x, y, speed_x, speed_y, width, height, canvas)
+  attr_accessor :x, :y, :speed_x, :speed_y, :width, :height, :direction_change_handler
+  def initialize(x, y, speed_x, speed_y, width, height, canvas, on_direction_change: lambda {})
     @x = x
     @y = y
     @speed_x = speed_x
@@ -10,21 +10,22 @@ module Moveable
     @width = width
     @height = height
     @canvas = canvas
+    @direction_change_handler = on_direction_change
   end
 
   def move(direction)
     case direction
     when :left
-      set_sprite_row(:left) # TODO: coupled to includer
+      direction_change_handler.call(:left) # TODO: coupled to includer
       @x -= @speed_x if within_limits?(@x - @speed_x, @y)
     when :right
-      set_sprite_row(:right)
+      direction_change_handler.call(:right)
       @x += @speed_x if within_limits?(@x + @speed_x, @y)
     when :up
-      set_sprite_row(:up)
+      direction_change_handler.call(:up)
       @y -= @speed_y if within_limits?(@x, @y - @speed_y)
     when :down
-      set_sprite_row(:down)
+      direction_change_handler.call(:down)
       @y += @speed_y if within_limits?(@x, @y + @speed_y)
     end
   end
@@ -53,7 +54,16 @@ class Hero
     @frame_col = 0
     @frame_row = 2
     @frame_sequence = circular(from: 0, to: 2)
-    super(x, y, SPEED_X, SPEED_Y, WIDTH, HEIGHT, canvas)
+    super(
+      x,
+      y,
+      SPEED_X,
+      SPEED_Y,
+      WIDTH,
+      HEIGHT,
+      canvas,
+      on_direction_change: method(:set_sprite_row)
+    )
   end
 
   def increment_sprite_col
@@ -62,6 +72,7 @@ class Hero
     end
   end
 
+  # called by movable when direction changes
   def set_sprite_row(direction)
     case direction
     when :left
