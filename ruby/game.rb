@@ -6,6 +6,7 @@ FPS = 60.freeze
 @ctx = @canvas.getContext("2d")
 TIME_PER_FRAME = (1000 / FPS).freeze
 @hero = Hero.new(0,0, @canvas, @ctx)
+@maze = Maze.new(@canvas, @ctx)
 
 @pressed_keys = {up: false, down: false, left: false, right: false}
 
@@ -19,6 +20,7 @@ end
 def draw
   @ctx.clearRect(0,0, @canvas[:width].to_i, @canvas[:height].to_i)
   update
+  @maze.draw
   @hero.draw
 end
 
