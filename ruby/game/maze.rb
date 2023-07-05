@@ -42,6 +42,10 @@ class Maze
     @blocks.each(&:draw)
   end
 
+  def collision?(other_x, other_y, other_width, other_height)
+    @blocks.any? {|block| block.colliding?(other_x, other_y, other_width, other_height)}
+  end
+
   private
 
   def create_blocks(canvas, context)

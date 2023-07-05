@@ -5,16 +5,16 @@ FPS = 60.freeze
 @canvas = JS.global[:document].querySelector('#myCanvas')
 @ctx = @canvas.getContext("2d")
 TIME_PER_FRAME = (1000 / FPS).freeze
-@hero = Hero.new(0,0, @canvas, @ctx)
+@hero = Hero.new(32, 32, @canvas, @ctx)
 @maze = Maze.new(@canvas, @ctx)
 
 @pressed_keys = {up: false, down: false, left: false, right: false}
 
 def update
-  @hero.move(:down) if @pressed_keys[:down]
-  @hero.move(:right) if @pressed_keys[:right]
-  @hero.move(:up) if @pressed_keys[:up]
-  @hero.move(:left) if @pressed_keys[:left]
+  @hero.move(:down, @maze) if @pressed_keys[:down]
+  @hero.move(:right, @maze) if @pressed_keys[:right]
+  @hero.move(:up, @maze) if @pressed_keys[:up]
+  @hero.move(:left, @maze) if @pressed_keys[:left]
 end
 
 def draw

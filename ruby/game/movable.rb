@@ -11,29 +11,24 @@ module Moveable
     drawable_setup(x, y, width, height, canvas)
   end
 
-  def move(direction)
+  def move(direction, walls)
     case direction
     when :left
       direction_change_handler.call(:left)
-      @x -= @speed_x if within_limits?(@x - @speed_x, @y)
+      @x -= @speed_x if no_collision?(@x - @speed_x, @y, walls)
     when :right
       direction_change_handler.call(:right)
-      @x += @speed_x if within_limits?(@x + @speed_x, @y)
+      @x += @speed_x if no_collision?(@x + @speed_x, @y, walls)
     when :up
       direction_change_handler.call(:up)
-      @y -= @speed_y if within_limits?(@x, @y - @speed_y)
+      @y -= @speed_y if no_collision?(@x, @y - @speed_y, walls)
     when :down
       direction_change_handler.call(:down)
-      @y += @speed_y if within_limits?(@x, @y + @speed_y)
+      @y += @speed_y if no_collision?(@x, @y + @speed_y, walls)
     end
   end
 
-  def within_limits?(x, y)
-    before_right_limit = x + @width <= @canvas[:width].to_i
-    after_left_limit = x >= 0
-    before_bottom_limit = y + @height <= @canvas[:height].to_i
-    after_top_limit = y >= 0
-
-    before_right_limit && after_left_limit && before_bottom_limit && after_top_limit
+  def no_collision?(new_x, new_y, walls)
+    !walls.collision?(new_x, new_y, @width, @height)
   end
 end
